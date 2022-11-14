@@ -128,6 +128,7 @@ GameObject:
   - component: {fileID: 7757390699404397382}
   - component: {fileID: 7750193491791701650}
   - component: {fileID: 4872559708961026867}
+  - component: {fileID: 6975796088139486413}
   m_Layer: 6
   m_Name: Block
   m_TagString: Ground
@@ -214,6 +215,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rend: {fileID: 1548658418608599065}
+  data:
+    Idx: {x: 0, y: 0}
+    Color:
+    - 1
+    - 1
+    - 1
+    - 1
+    CharId: 
+    CharRotation: 0
+--- !u!65 &6975796088139486413
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7772051142342449298}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1.0000001, z: 1.0000001}
+  m_Center: {x: 0, y: -0.49999997, z: -0.000000059604645}
 --- !u!1 &8729118925844996913
 GameObject:
   m_ObjectHideFlags: 0

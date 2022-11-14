@@ -13,7 +13,7 @@ public class BlocksData
         {
             for (int y = 0; y < 10; y++)
             {
-                BlockData blockData = new BlockData(new Vector2Int(x, y), new float[4] {1, 1, 1, 1}, string.Empty);
+                BlockData blockData = new BlockData(new Vector2Int(x, y), "", string.Empty);
                 this.Data.Add(blockData);
             }
         }
@@ -52,15 +52,15 @@ public class BlocksData
 public class BlockData
 {
     public Vector2Int Idx;
-    public float[] Color; // * r b g a
+    public string Color; // * r b g a
     public string CharId;
     public float CharRotation;
     public BlockData()
     {
-        Color = new float[4] {1, 1, 1, 1};
+        Color = "";
         CharId = string.Empty;
     }
-    public BlockData(Vector2Int idx, float[] color, string charId = "")
+    public BlockData(Vector2Int idx, string color, string charId = "")
     {
         this.Idx = idx;
         this.Color = color;

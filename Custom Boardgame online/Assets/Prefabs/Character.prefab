@@ -7281,10 +7281,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InputHandler: {fileID: 3592487635726336066}
-  Id: 
-  CurrentBlock: {fileID: 0}
-  MoveableBlocks: []
-  CharacterColor: {r: 0, g: 0, b: 0, a: 0}
+  moveComplete: 0
+  Animator: {fileID: 1746541382241849447}
 --- !u!114 &3592487635726336066
 MonoBehaviour:
   m_ObjectHideFlags: 0

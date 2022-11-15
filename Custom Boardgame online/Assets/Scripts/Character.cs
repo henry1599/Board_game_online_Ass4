@@ -5,15 +5,26 @@ using DG.Tweening;
 
 public class Character : MonoBehaviour
 {
+    private static readonly int MoveKeyAnimation = Animator.StringToHash("Move");
+    private static readonly int IdleKeyAnimation = Animator.StringToHash("Idle");
     public InputHandler InputHandler;
-    public string Id;
-    public Block CurrentBlock;
-    public List<Vector2Int> MoveableBlocks;
-    public Color CharacterColor;
-    public bool MoveComplete = false;
-
+    public string Id {get; set;}
+    public Block CurrentBlock {get; set;}
+    public List<Vector2Int> MoveableBlocks {get; set;}
+    public Color CharacterColor {get; set;}
+    public bool MoveComplete
+    {
+        get => this.moveComplete;
+        set => this.moveComplete = value;
+    } bool moveComplete;
+    public Animator Animator;
+    void Start()
+    {
+        this.Animator.CrossFade(IdleKeyAnimation, 0, 0);    
+    }
     public List<Vector2Int> MoveToBlock(Block block)
     {
+        this.Animator.CrossFade(MoveKeyAnimation, 0, 0);
         MoveComplete = false;
         List<Vector2Int> movePath;
         if (CurrentBlock == null)
@@ -28,8 +39,12 @@ public class Character : MonoBehaviour
             float moveDuration = Mathf.Clamp((block.data.Idx - CurrentBlock.data.Idx).magnitude, 0.5f, 2);
             movePath = Utils.GetMovePath(CurrentBlock, block);
             transform.DOLocalMove(block.transform.localPosition, moveDuration)
-                    .SetEase(Ease.Linear).OnComplete(() => MoveComplete = true);
-            transform.DORotateQuaternion(rotation, 0.5f).SetEase(Ease.Linear);
+                    .SetEase(Ease.Linear).OnComplete(() => 
+                    {
+                        MoveComplete = true;
+                        this.Animator.CrossFade(IdleKeyAnimation, 0, 0);
+                    });
+            transform.DORotateQuaternion(rotation, 0.25f).SetEase(Ease.Linear);
         }
 
         CurrentBlock = block;

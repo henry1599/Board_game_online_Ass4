@@ -7217,7 +7217,6 @@ GameObject:
   - component: {fileID: 5682657583009516061}
   - component: {fileID: 1746541382241849447}
   - component: {fileID: -5057789328406656909}
-  - component: {fileID: 3592487635726336066}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -7280,23 +7279,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efb00774a76ea0d4da9f51267de44640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InputHandler: {fileID: 3592487635726336066}
+  InputHandler: {fileID: 0}
+  animator: {fileID: 1746541382241849447}
   Id: 
   CurrentBlock: {fileID: 0}
   MoveableBlocks: []
   CharacterColor: {r: 0, g: 0, b: 0, a: 0}
---- !u!114 &3592487635726336066
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5014488092531626151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fe71a795b03a1e468802d8e68bd4108, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  MoveComplete: 0
 --- !u!1 &5034598088630315118
 GameObject:
   m_ObjectHideFlags: 0

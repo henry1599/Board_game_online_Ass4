@@ -6,6 +6,7 @@ using DG.Tweening;
 public class Character : MonoBehaviour
 {
     public InputHandler InputHandler;
+    public Animator animator;
     public string Id;
     public Block CurrentBlock;
     public List<Vector2Int> MoveableBlocks;
@@ -25,10 +26,16 @@ public class Character : MonoBehaviour
         else
         {
             Quaternion rotation = Quaternion.LookRotation(block.transform.position - transform.position, Vector3.up);
-            float moveDuration = Mathf.Clamp((block.data.Idx - CurrentBlock.data.Idx).magnitude, 0.5f, 2);
+            float moveDuration = Mathf.Clamp((block.data.Idx - CurrentBlock.data.Idx).magnitude / 2, 0.5f, 2);
             movePath = Utils.GetMovePath(CurrentBlock, block);
+            animator.SetBool("IsRunning", true);
             transform.DOLocalMove(block.transform.localPosition, moveDuration)
-                    .SetEase(Ease.Linear).OnComplete(() => MoveComplete = true);
+                    .SetEase(Ease.Linear)
+                    .OnComplete(() =>
+                    {
+                        MoveComplete = true;
+                        animator.SetBool("IsRunning", false);
+                    });
             transform.DORotateQuaternion(rotation, 0.5f).SetEase(Ease.Linear);
         }
 

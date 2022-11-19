@@ -15,7 +15,7 @@ public class LevelManager : MonoBehaviour
     public Transform blockContainer;
     public Block blockTemplate;
     public List<Block> blocks;
-    Dictionary<string, Character> characters;
+    public Dictionary<string, Character> characters;
     private int numCharacters = 0;
 
     // Start is called before the first frame update
@@ -56,10 +56,18 @@ public class LevelManager : MonoBehaviour
             Character charInstance = Instantiate(this.characterTemplate, this.characterContainer);
             charInstance.Id = charId;
             charInstance.CharacterColor = colors[numCharacters];
+            if (numCharacters == 0)
+            {
+                charInstance.InputHandler = charInstance.gameObject.AddComponent<MouseInput>();
+            }
+            else
+            {
+                charInstance.InputHandler = charInstance.gameObject.AddComponent<MinimaxInput>();
+                charInstance.InputHandler.GetInput();
+            }
             charInstance.InputHandler.Init(charInstance);
             charInstance.InputHandler.OnGetInput += MoveCharacter;
-            if (numCharacters == 0)
-                charInstance.InputHandler.GetInput();
+
             numCharacters++;
             List<Vector2Int> movePath = charInstance.MoveToBlock(this.blocks[x * 10 + y]);
             UpdateMap(charInstance, movePath);
@@ -140,11 +148,9 @@ public class LevelManager : MonoBehaviour
         {
             character.CurrentBlock.data.CharId = "";
             block.data.CharId = currentCharId;
-            int nextCharacterIndex = currentCharIndex + 1;
-            if (nextCharacterIndex >= charIds.Count)
-                nextCharacterIndex = 0;
+            Character nextCharacter = GetNextCharacter(currentCharId);
             UpdateCharacter();
-            StartCoroutine(ChangeCharacterTurn(character, charIds[nextCharacterIndex]));
+            StartCoroutine(ChangeCharacterTurn(character, nextCharacter.Id));
         }
     }
 
@@ -153,5 +159,28 @@ public class LevelManager : MonoBehaviour
         yield return null;
         yield return new WaitUntil(() => character.MoveComplete);
         characters[nextCharId].InputHandler.GetInput();
+        Debug.Log($"Score: {Utils.GetReward(blocksData, "0", false)}, {Utils.GetReward(blocksData, "1", false)}; Turn: {nextCharId}");
+    }
+
+    public Character GetNextCharacter(string currentCharId)
+    {
+        List<string> charIds = new List<string>(characters.Keys);
+        int currentCharIndex = -1;
+        for (int i = 0; i < charIds.Count; i++)
+        {
+            if (charIds[i] == currentCharId)
+                currentCharIndex = i;
+        }
+        if (currentCharIndex == -1)
+        {
+            Debug.LogError($"Character id {currentCharId} not found");
+            return null;
+        }
+
+        int nextCharacterIndex = currentCharIndex + 1;
+        if (nextCharacterIndex >= charIds.Count)
+            nextCharacterIndex = 0;
+
+        return characters[charIds[nextCharacterIndex]];
     }
 }

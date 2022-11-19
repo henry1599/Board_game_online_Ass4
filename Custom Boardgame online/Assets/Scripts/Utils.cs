@@ -121,7 +121,34 @@ public class Utils
                 movePath.Add(new Vector2Int(currentBlock.data.Idx.x + i, currentBlock.data.Idx.y - i));
         }
 
-        Debug.Log("Move path: " + movePath.ToString());
         return movePath;
+    }
+
+    public static int GetReward(BlocksData data, string charId, bool hasNegativceReward = true)
+    {
+        int positiveReward = 0;
+        int negativeReward = 0;
+        int flag = hasNegativceReward ? 1 : 0;
+        foreach (BlockData blockData in data.Data)
+        {
+            if (blockData.Color == charId)
+                positiveReward++;
+            else if (blockData.Color != "")
+                negativeReward++;
+        }
+        return positiveReward - negativeReward * flag;
+    }
+
+    public static BlocksData GetNewBlocksData(BlocksData currentblocksData, string charId, List<Vector2Int> path)
+    {
+        BlocksData blocksData = new BlocksData(currentblocksData);
+        foreach (BlockData blockData in blocksData.Data)
+        {
+            if (path.Contains(blockData.Idx))
+            {
+                blockData.Color = charId;
+            }
+        }
+        return blocksData;
     }
 }

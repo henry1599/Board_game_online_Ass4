@@ -20,14 +20,28 @@ public class BlocksData
         this.Data[0 * 10 + 0].CharId = "0";
         this.Data[0 * 10 + 0].CharRotation = -90;
 
-        this.Data[9 * 10 + 0].CharId = "1";
+        this.Data[9 * 10 + 0].CharId = "";
         this.Data[9 * 10 + 0].CharRotation = 90;
 
-        this.Data[0 * 10 + 9].CharId = "2";
+        this.Data[0 * 10 + 9].CharId = "";
         this.Data[0 * 10 + 9].CharRotation = 180;
 
-        this.Data[9 * 10 + 9].CharId = "3";
+        this.Data[9 * 10 + 9].CharId = "1";
         this.Data[9 * 10 + 9].CharRotation = 180;
+    }
+    public BlocksData(BlocksData other)
+    {
+        this.Data = new List<BlockData>();
+        for (int x = 0; x < 10; x++)
+        {
+            for (int y = 0; y < 10; y++)
+            {
+                BlockData blockData = new BlockData(other.Data[x * 10 + y].Idx,
+                                                    other.Data[x * 10 + y].Color,
+                                                    other.Data[x * 10 + y].CharId);
+                this.Data.Add(blockData);
+            }
+        }
     }
     public void SetRandomPositionChar()
     {

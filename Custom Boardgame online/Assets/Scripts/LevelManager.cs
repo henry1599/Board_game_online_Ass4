@@ -159,7 +159,7 @@ public class LevelManager : MonoBehaviour
         yield return null;
         yield return new WaitUntil(() => character.MoveComplete);
         characters[nextCharId].InputHandler.GetInput();
-        Debug.Log($"Score: {Utils.GetReward(blocksData, "0", false)}, {Utils.GetReward(blocksData, "1", false)}; Turn: {nextCharId}");
+        // Debug.Log($"Score: {Utils.GetReward(blocksData, "0", false)}, {Utils.GetReward(blocksData, "1", false)}; Turn: {nextCharId}");
     }
 
     public Character GetNextCharacter(string currentCharId)

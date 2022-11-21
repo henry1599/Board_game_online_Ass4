@@ -74,7 +74,7 @@ public class Utils
 
         if (currentBlock.data.Idx.x == moveToBlock.data.Idx.x && currentBlock.data.Idx.y == moveToBlock.data.Idx.y)
         {
-            Debug.Log("Player dont move ???");
+            // Debug.Log("Player dont move ???");
         }
         else if (currentBlock.data.Idx.x < moveToBlock.data.Idx.x && currentBlock.data.Idx.y == moveToBlock.data.Idx.y)
         {

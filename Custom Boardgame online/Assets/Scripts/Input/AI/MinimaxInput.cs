@@ -40,7 +40,7 @@ public class MinimaxInput : AIInput
             }
             evaluationList.Add(evaluation);
         }
-        Debug.Log($"x: {bestTargetBlock.data.Idx.x}, y: {bestTargetBlock.data.Idx.y} -> evaluation: {bestEvaluation}");
+        // Debug.Log($"x: {bestTargetBlock.data.Idx.x}, y: {bestTargetBlock.data.Idx.y} -> evaluation: {bestEvaluation}");
         // string debug = "";
         // foreach (int eval in evaluationList)
         // {

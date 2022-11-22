@@ -56,14 +56,30 @@ public class LevelManager : MonoBehaviour
             Character charInstance = Instantiate(this.characterTemplate, this.characterContainer);
             charInstance.Id = charId;
             charInstance.CharacterColor = colors[numCharacters];
-            if (numCharacters == 0)
+            if (GameManager.CurrentMode == GameMode.Online)
             {
-                charInstance.InputHandler = charInstance.gameObject.AddComponent<MouseInput>();
+                if (charId == GameManager.PlayerId)
+                    charInstance.InputHandler = charInstance.gameObject.AddComponent<MouseInput>();
+                else
+                    charInstance.InputHandler = charInstance.gameObject.AddComponent<NetworkInput>();
+
+                if (numCharacters == 0)
+                    charInstance.InputHandler.GetInput();
             }
             else
             {
-                charInstance.InputHandler = charInstance.gameObject.AddComponent<MinimaxInput>();
-                charInstance.InputHandler.GetInput();
+                if (numCharacters == 0)
+                {
+                    charInstance.InputHandler = charInstance.gameObject.AddComponent<MouseInput>();
+                    charInstance.InputHandler.GetInput();
+                }
+                else
+                {
+                    if (GameManager.CurrentMode == GameMode.Minimax)
+                        charInstance.InputHandler = charInstance.gameObject.AddComponent<MinimaxInput>();
+                    else if (GameManager.CurrentMode == GameMode.Random)
+                        charInstance.InputHandler = charInstance.gameObject.AddComponent<RandomInput>();
+                }
             }
             charInstance.InputHandler.Init(charInstance);
             charInstance.InputHandler.OnGetInput += MoveCharacter;

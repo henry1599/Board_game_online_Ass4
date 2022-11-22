@@ -18,6 +18,18 @@ public class MouseInput : InputHandler
             Debug.Log(character.Id);
             OnGetInput?.Invoke(character, block);
             Active = false;
+
+            if (GameManager.CurrentMode == GameMode.Online)
+            {
+                var pos = new PositionData();
+                pos.id = character.Id;
+                pos.x = block.data.Idx.x;
+                pos.y = block.data.Idx.y;
+                var msg = new Message();
+                msg.type = DataType.MOVERMENT;
+                msg.data = pos;
+                ConnectionUtils.SendMessage(msg);
+            }
         };
     }
 

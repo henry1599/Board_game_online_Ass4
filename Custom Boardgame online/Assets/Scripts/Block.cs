@@ -22,6 +22,7 @@ public class Block : MonoBehaviour
     {
         OnClick?.Invoke(this);
     }
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if (data != null)
@@ -29,4 +30,5 @@ public class Block : MonoBehaviour
             Handles.Label(transform.position + Vector3.up * 0.5f, $"x:{data.Idx.x},y:{data.Idx.y}");
         }
     }
+#endif
 }

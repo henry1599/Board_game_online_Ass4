@@ -7,6 +7,12 @@
       "dependencies": {},
       "hash": "c5101c07762251edc82caad9e8a39d51b1229c31"
     },
+    "com.unity.2d.sprite": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
     "com.unity.burst": {
       "version": "1.7.3",
       "depth": 1,
@@ -100,7 +106,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.services.core": {
-      "version": "1.5.2",
+      "version": "1.4.2",
       "depth": 1,
       "source": "registry",
       "dependencies": {

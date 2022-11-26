@@ -184,7 +184,8 @@ public class LevelManager : MonoBehaviour
             block.data.CharId = currentCharId;
             UpdateCharacter();
             Character nextCharacter = GetNextCharacter(currentCharId);
-            StartCoroutine(ChangeCharacterTurn(character, nextCharacter.Id));
+            if (nextCharacter != null)
+                StartCoroutine(ChangeCharacterTurn(character, nextCharacter.Id));
         }
     }
 
@@ -196,7 +197,7 @@ public class LevelManager : MonoBehaviour
         // Debug.Log($"Score: {Utils.GetReward(blocksData, "0", false)}, {Utils.GetReward(blocksData, "1", false)}; Turn: {nextCharId}");
     }
 
-    public Character GetNextCharacter(string currentCharId)
+    public Character GetNextCharacter(string currentCharId, bool isMinimax = false)
     {
         List<string> charIds = new List<string>(characters.Keys);
         int currentCharIndex = -1;
@@ -214,13 +215,15 @@ public class LevelManager : MonoBehaviour
         int nextCharacterIndex = currentCharIndex + 1;
         if (nextCharacterIndex >= charIds.Count)
         {
-            GameManager.CurrentRound++;
+            if (!isMinimax)
+                GameManager.CurrentRound++;
             if (GameManager.CurrentRound > GameManager.Round)
             {
                 if (GameManager.CurrentMode == GameMode.Training)
                     GameManager.ResetGame();
                 else
                     GameManager.EndGame();
+                return null;
             }
             else
                 Debug.Log("--- Round : " + GameManager.CurrentRound);

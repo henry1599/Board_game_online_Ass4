@@ -25,5 +25,6 @@ public class NetworkInput : InputHandler
         yield return new WaitUntil(() => GameManager.IsActive);
         Block targetBlock = LevelManager.Instance.GetBlock(position);
         OnGetInput?.Invoke(character, targetBlock);
+        Active = false;
     }
 }

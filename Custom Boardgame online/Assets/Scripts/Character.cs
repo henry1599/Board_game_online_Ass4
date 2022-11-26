@@ -5,6 +5,7 @@ using DG.Tweening;
 
 public class Character : MonoBehaviour
 {
+    public GameObject arrow;
     public List<GameObject> bodies;
     public InputHandler InputHandler;
     public Animator animator;
@@ -21,6 +22,11 @@ public class Character : MonoBehaviour
             body.SetActive(false);
         }
         bodies[index].SetActive(true);
+    }
+
+    private void Update()
+    {
+        arrow.transform.Rotate(Vector3.up, 30 * Time.deltaTime, Space.Self);
     }
 
     public List<Vector2Int> MoveToBlock(Block block)

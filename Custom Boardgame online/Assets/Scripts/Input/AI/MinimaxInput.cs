@@ -29,7 +29,7 @@ public class MinimaxInput : AIInput
         Block startBlock = CurrentCharacterBlock[charId];
         List<Vector2Int> moveableBlocks = Utils.GetMoveableBlocks(startBlock.data);
 
-        string nextCharId = LevelManager.Instance.GetNextCharacter(charId).Id;
+        string nextCharId = LevelManager.Instance.GetNextCharacter(charId, true).Id;
         if (isMaximizeCharacter)
         {
             bestEvaluation = -1000;
@@ -111,5 +111,6 @@ public class MinimaxInput : AIInput
         }
 
         OnGetInput?.Invoke(character, bestTargetBlock);
+        Active = false;
     }
 }

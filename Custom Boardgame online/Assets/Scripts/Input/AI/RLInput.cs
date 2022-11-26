@@ -22,5 +22,6 @@ public class RLInput : AIInput
     {
         Block block = LevelManager.Instance.GetBlock(target);
         OnGetInput?.Invoke(character, block);
+        Active = false;
     }
 }

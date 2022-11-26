@@ -9,6 +9,11 @@ public class InputHandler : MonoBehaviour
     public bool Active { get; protected set; } = false;
     public Action<Character, Block> OnGetInput;
 
+    public virtual void Update()
+    {
+        character.arrow.SetActive(Active);
+    }
+
     public virtual void Init(Character character)
     {
         this.character = character;

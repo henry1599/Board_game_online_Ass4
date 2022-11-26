@@ -12,5 +12,6 @@ public class RandomInput : AIInput
         int targetIndex = Random.Range(0, moveableBlocks.Count);
         Block targetBlock = LevelManager.Instance.GetBlock(moveableBlocks[targetIndex]);
         OnGetInput?.Invoke(character, targetBlock);
+        Active = false;
     }
 }

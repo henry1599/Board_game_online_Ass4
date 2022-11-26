@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     public static GameMode CurrentMode = GameMode.Random;
     public static MinimaxMode MinimaxCurrentMode = MinimaxMode.Easy;
     public static string PlayerId = "0";
-    public const int Round = 1;
+    public const int Round = 20;
     public static int CurrentRound = 1;
     private LevelManager currentLevelManager = null;
 
@@ -68,7 +68,10 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
-        waitingCanvas.SetActive(currentLevelManager != null && _isActive != IsActive);
+        if (currentLevelManager == null)
+            waitingCanvas.SetActive(false);
+        else
+            waitingCanvas.SetActive(_isActive != IsActive);
 
         if (Input.GetKeyDown(KeyCode.Escape) && currentLevelManager != null)
         {

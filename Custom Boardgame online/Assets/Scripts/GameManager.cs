@@ -7,11 +7,177 @@ public enum GameMode
     Random,
     Minimax,
     MachineLearning,
-    Online
+    Online,
+    Training,
+    Compare,
+}
+
+public enum MinimaxMode
+{
+    Easy,
+    Normal,
+    Hard,
 }
 
 public class GameManager : MonoBehaviour
 {
-    public static GameMode CurrentMode = GameMode.Minimax;
+    [SerializeField] private LevelManager levelManagerPrefab;
+    [SerializeField] private GameObject waitingCanvas;
+    public static GameMode CurrentMode = GameMode.Random;
+    public static MinimaxMode MinimaxCurrentMode = MinimaxMode.Easy;
     public static string PlayerId = "0";
+    public const int Round = 1;
+    public static int CurrentRound = 1;
+    private LevelManager currentLevelManager = null;
+
+    private static bool _isActive = true;
+    private static List<bool> _playerActive = new List<bool>() { false, false };
+    public static bool IsActive
+    {
+        get
+        {
+            if (CurrentMode == GameMode.Online)
+            {
+                return _playerActive[0] && _playerActive[1];
+            }
+            else
+            {
+                return _isActive;
+            }
+        }
+    }
+
+    public static GameManager instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            ConnectionUtils.RegisterCallBack(DataType.ACTIVE_STATUS, ListenPlayerActive);
+            if (CurrentMode == GameMode.Training)
+            {
+                StartGame(CurrentMode);
+            }
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+    private void Update()
+    {
+        waitingCanvas.SetActive(currentLevelManager != null && _isActive != IsActive);
+
+        if (Input.GetKeyDown(KeyCode.Escape) && currentLevelManager != null)
+        {
+            GameEvents.PAUSE?.Invoke(_isActive);
+            _isActive = !_isActive;
+            Debug.Log("Game active : " + _isActive);
+            if (CurrentMode == GameMode.Online)
+            {
+                var activeData = new ActiveData();
+                activeData.id = PlayerId;
+                activeData.active = !_playerActive[int.Parse(PlayerId)];
+                var msg = new Message();
+                msg.type = DataType.ACTIVE_STATUS;
+                msg.data = activeData;
+                ConnectionUtils.SendMessage(msg);
+            }
+        }
+    }
+    public static void StartGame(GameMode mode)
+    {
+        CurrentMode = mode;
+        ResetGame();
+    }
+    public static void ResetGame()
+    {
+        _isActive = false;
+        if (CurrentMode == GameMode.Online)
+        {
+            var activeData = new ActiveData();
+            activeData.id = PlayerId;
+            activeData.active = false;
+            var msg = new Message();
+            msg.type = DataType.ACTIVE_STATUS;
+            msg.data = activeData;
+            ConnectionUtils.SendMessage(msg);
+        }
+        CurrentRound = 1;
+        instance.ResetLevel();
+    }
+
+    public void ResetLevel()
+    {
+        StartCoroutine(ResetCoroutine());
+    }
+
+    public IEnumerator ResetCoroutine()
+    {
+        yield return new WaitForSeconds(2);
+        var currentLevel = FindObjectOfType<LevelManager>();
+        if (currentLevel != null)
+            Destroy(currentLevel.gameObject);
+        currentLevelManager = Instantiate(levelManagerPrefab, Vector3.zero, Quaternion.identity);
+        _isActive = true;
+        if (CurrentMode == GameMode.Online)
+        {
+            var activeData = new ActiveData();
+            activeData.id = PlayerId;
+            activeData.active = true;
+            var msg = new Message();
+            msg.type = DataType.ACTIVE_STATUS;
+            msg.data = activeData;
+            ConnectionUtils.SendMessage(msg);
+        }
+    }
+
+    public static void SetPlayerActive(bool isActive, int index)
+    {
+        _playerActive[index] = isActive;
+        _isActive = isActive;
+    }
+
+    private bool ListenPlayerActive(Message msg)
+    {
+        var data = msg.data as ActiveData;
+        _playerActive[int.Parse(data.id)] = data.active;
+        Debug.Log($"player 0: {_playerActive[0]}, player 1: {_playerActive[1]}");
+        return true;
+    }
+
+    public static void EndGame()
+    {
+        _isActive = false;
+        string debugStr = "Final Score \n";
+        string playerWin = "";
+        int maxScore = 0;
+        Dictionary<string, int> finalScore = new Dictionary<string, int>();
+        foreach (var kv in LevelManager.Instance.characters)
+        {
+            finalScore.Add(kv.Key, Utils.GetReward(LevelManager.Instance.blocksData, kv.Key, false));
+            debugStr += $"{kv.Key}: {finalScore[kv.Key]} \n";
+            if (finalScore[kv.Key] > maxScore)
+            {
+                maxScore = finalScore[kv.Key];
+                playerWin = kv.Key;
+            }
+        }
+        Debug.Log(debugStr);
+        Debug.Log("Player win: " + playerWin);
+        instance.DelayShowVictory(int.Parse(playerWin));
+    }
+
+    public void DelayShowVictory(int charId)
+    {
+        StartCoroutine(DelayShowVictoryCoroutine(charId));
+    }
+
+    public IEnumerator DelayShowVictoryCoroutine(int charId)
+    {
+        yield return new WaitForSeconds(2);
+        VictoryScreenManager.Instance.Show(charId);
+    }
 }

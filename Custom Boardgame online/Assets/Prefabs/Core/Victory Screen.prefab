@@ -3779,6 +3779,11 @@ MonoBehaviour:
   restartButton: {fileID: 1124822448}
   container: {fileID: 4918101442184397931}
   character: {fileID: 3440698420771260170}
+  bodies:
+  - {fileID: 6636943055401594943}
+  - {fileID: 9058266625871738120}
+  - {fileID: 7873149085591272253}
+  - {fileID: 2692864707074689016}
   characterAnim: {fileID: 9100000, guid: f02fbdeaef6debb4db33638bb111d46b, type: 2}
   transitionAnim: {fileID: 992714233572752053}
   normalCamera: {fileID: 3440698420331472702}
@@ -4343,7 +4348,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2590233557377524204
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6502,6 +6507,30 @@ PrefabInstance:
 --- !u!4 &1199711564243614034 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5682657583009516061, guid: 445b469f26aaa554c9cd5676a743837f,
+    type: 3}
+  m_PrefabInstance: {fileID: 6808001971490747215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2692864707074689016 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8873247496911123639, guid: 445b469f26aaa554c9cd5676a743837f,
+    type: 3}
+  m_PrefabInstance: {fileID: 6808001971490747215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6636943055401594943 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 171639479539876720, guid: 445b469f26aaa554c9cd5676a743837f,
+    type: 3}
+  m_PrefabInstance: {fileID: 6808001971490747215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7873149085591272253 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3691239583754127474, guid: 445b469f26aaa554c9cd5676a743837f,
+    type: 3}
+  m_PrefabInstance: {fileID: 6808001971490747215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &9058266625871738120 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2580435291823212103, guid: 445b469f26aaa554c9cd5676a743837f,
     type: 3}
   m_PrefabInstance: {fileID: 6808001971490747215}
   m_PrefabAsset: {fileID: 0}

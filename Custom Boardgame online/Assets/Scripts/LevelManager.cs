@@ -12,6 +12,7 @@ public class LevelManager : MonoBehaviour
     public BlocksData blocksData = null;
     public Transform characterContainer;
     public Character characterTemplate;
+    public Character agentTemplate;
     public Transform blockContainer;
     public Block blockTemplate;
     public List<Block> blocks;
@@ -21,6 +22,7 @@ public class LevelManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("--- Round : " + GameManager.CurrentRound);
         Instance = this;
         this.blocksData = new BlocksData();
         this.characters = new Dictionary<string, Character>();
@@ -53,25 +55,38 @@ public class LevelManager : MonoBehaviour
             string charId = blockData.CharId;
             if (charId == "") continue;
 
-            Character charInstance = Instantiate(this.characterTemplate, this.characterContainer);
+
+            Character charInstance;
+            if (GameManager.CurrentMode != GameMode.Training &&
+                (GameManager.CurrentMode != GameMode.MachineLearning || charId == "0") &&
+                (GameManager.CurrentMode != GameMode.Compare || charId == "0"))
+                charInstance = Instantiate(this.characterTemplate, this.characterContainer);
+            else
+            {
+                charInstance = Instantiate(this.agentTemplate, this.characterContainer);
+                charInstance.InputHandler = charInstance.GetComponent<RLInput>();
+            }
             charInstance.Id = charId;
-            charInstance.CharacterColor = colors[numCharacters];
+            charInstance.CharacterColor = colors[int.Parse(charId)];
             if (GameManager.CurrentMode == GameMode.Online)
             {
                 if (charId == GameManager.PlayerId)
                     charInstance.InputHandler = charInstance.gameObject.AddComponent<MouseInput>();
                 else
                     charInstance.InputHandler = charInstance.gameObject.AddComponent<NetworkInput>();
-
-                if (numCharacters == 0)
-                    charInstance.InputHandler.GetInput();
             }
-            else
+            else if (GameManager.CurrentMode == GameMode.Compare)
             {
                 if (numCharacters == 0)
                 {
+                    charInstance.InputHandler = charInstance.gameObject.AddComponent<RandomInput>();
+                }
+            }
+            else
+            {
+                if (GameManager.CurrentMode != GameMode.Training && numCharacters == 0)
+                {
                     charInstance.InputHandler = charInstance.gameObject.AddComponent<MouseInput>();
-                    charInstance.InputHandler.GetInput();
                 }
                 else
                 {
@@ -83,6 +98,9 @@ public class LevelManager : MonoBehaviour
             }
             charInstance.InputHandler.Init(charInstance);
             charInstance.InputHandler.OnGetInput += MoveCharacter;
+            if (numCharacters == 0)
+                charInstance.InputHandler.GetInput();
+            charInstance.Init(int.Parse(charInstance.Id));
 
             numCharacters++;
             List<Vector2Int> movePath = charInstance.MoveToBlock(this.blocks[x * 10 + y]);
@@ -164,8 +182,8 @@ public class LevelManager : MonoBehaviour
         {
             character.CurrentBlock.data.CharId = "";
             block.data.CharId = currentCharId;
-            Character nextCharacter = GetNextCharacter(currentCharId);
             UpdateCharacter();
+            Character nextCharacter = GetNextCharacter(currentCharId);
             StartCoroutine(ChangeCharacterTurn(character, nextCharacter.Id));
         }
     }
@@ -195,7 +213,19 @@ public class LevelManager : MonoBehaviour
 
         int nextCharacterIndex = currentCharIndex + 1;
         if (nextCharacterIndex >= charIds.Count)
+        {
+            GameManager.CurrentRound++;
+            if (GameManager.CurrentRound > GameManager.Round)
+            {
+                if (GameManager.CurrentMode == GameMode.Training)
+                    GameManager.ResetGame();
+                else
+                    GameManager.EndGame();
+            }
+            else
+                Debug.Log("--- Round : " + GameManager.CurrentRound);
             nextCharacterIndex = 0;
+        }
 
         return characters[charIds[nextCharacterIndex]];
     }

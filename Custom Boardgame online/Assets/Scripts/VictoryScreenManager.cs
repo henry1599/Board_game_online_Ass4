@@ -21,6 +21,7 @@ public class VictoryScreenManager : MonoBehaviour
     [SerializeField] Button restartButton;
     [SerializeField] GameObject container;
     [SerializeField] GameObject character;
+    [SerializeField] List<GameObject> bodies;
     [SerializeField] RuntimeAnimatorController characterAnim;
     [SerializeField] Animator transitionAnim;
     [SerializeField] GameObject normalCamera;
@@ -47,14 +48,14 @@ public class VictoryScreenManager : MonoBehaviour
         }
     }
     [NaughtyAttributes.Button("Show Victory Screen")]
-    public void Show()
+    public void Show(int charId)
     {
-        StartCoroutine(Cor_Show());
+        StartCoroutine(Cor_Show(charId));
 
         backButton.onClick.AddListener(() => OnBackButtonClick());
         restartButton.onClick.AddListener(() => OnRestartButtonClick());
     }
-    IEnumerator Cor_Show()
+    IEnumerator Cor_Show(int charId)
     {
         this.container.gameObject.SetActive(true);
         // SoundManager.Instance.PlaySound(SoundID.TRANSITION_IN);
@@ -64,11 +65,16 @@ public class VictoryScreenManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         // SoundManager.Instance.PlaySound(SoundID.CONFETTI);
         // SoundManager.Instance.PlaySound(SoundID.WIN);
-        CreateCharacter();
+        CreateCharacter(charId);
         yield return new WaitForSeconds(0.5f);
     }
-    void CreateCharacter()
+    void CreateCharacter(int charId)
     {
+        foreach (var body in bodies)
+        {
+            body.SetActive(false);
+        }
+        bodies[charId].SetActive(true);
         this.character.SetActive(true);
         this.character.GetComponentInChildren<Animator>().runtimeAnimatorController = this.characterAnim;
         this.character.GetComponentInChildren<Animator>().CrossFade(DanceTransitionKeys[Random.Range(0, DanceTransitionKeys.Length)], 0, 0);

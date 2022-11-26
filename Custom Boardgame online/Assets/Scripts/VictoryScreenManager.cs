@@ -70,11 +70,13 @@ public class VictoryScreenManager : MonoBehaviour
     }
     void CreateCharacter(int charId)
     {
+        int idx = 0;
         foreach (var body in bodies)
         {
-            body.SetActive(false);
+            body.SetActive(idx == charId);
+            idx ++;
         }
-        bodies[charId].SetActive(true);
+        // bodies[charId].SetActive(true);
         this.character.SetActive(true);
         this.character.GetComponentInChildren<Animator>().runtimeAnimatorController = this.characterAnim;
         this.character.GetComponentInChildren<Animator>().CrossFade(DanceTransitionKeys[Random.Range(0, DanceTransitionKeys.Length)], 0, 0);

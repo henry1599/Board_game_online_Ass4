@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3720,6 +3720,7 @@ MonoBehaviour:
   levelManagerPrefab: {fileID: 8555518447833698739, guid: 3dcbdb31995540644ba5b76864461e81,
     type: 3}
   waitingCanvas: {fileID: 1037146795}
+  RoundConfig: {fileID: 11400000, guid: 51d2c9bb0e5f37b46b35f0766fc71d6d, type: 2}
 --- !u!4 &1672339847
 Transform:
   m_ObjectHideFlags: 0

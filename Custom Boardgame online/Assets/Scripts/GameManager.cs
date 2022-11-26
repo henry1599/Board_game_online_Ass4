@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 public enum GameMode
@@ -26,9 +27,19 @@ public class GameManager : MonoBehaviour
     public static GameMode CurrentMode = GameMode.Random;
     public static MinimaxMode MinimaxCurrentMode = MinimaxMode.Easy;
     public static string PlayerId = "0";
-    public const int Round = 20;
-    public static int CurrentRound = 1;
+    public RoundConfig RoundConfig;
+    public static int Round {get; set;}
+    public static int CurrentRound
+    {
+        get => currentRound;
+        set
+        {
+            currentRound = value;
+            ON_ROUND_CHANGED?.Invoke(Round - value + 1);
+        }
+    } private static int currentRound = 1;
     private LevelManager currentLevelManager = null;
+    public static System.Action<int> ON_ROUND_CHANGED;
 
     private static bool _isActive = true;
     private static List<bool> _playerActive = new List<bool>() { false, false };
@@ -65,6 +76,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        Round = RoundConfig.Round;
     }
     private void Update()
     {
@@ -147,28 +159,30 @@ public class GameManager : MonoBehaviour
     {
         var data = msg.data as ActiveData;
         _playerActive[int.Parse(data.id)] = data.active;
-        Debug.Log($"player 0: {_playerActive[0]}, player 1: {_playerActive[1]}");
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.AppendFormat("player 0: {0}, player 1: {1}", _playerActive[0], _playerActive[1]);
+        Debug.Log(stringBuilder.ToString());
         return true;
     }
 
     public static void EndGame()
     {
         _isActive = false;
-        string debugStr = "Final Score \n";
         string playerWin = "";
         int maxScore = 0;
+        StringBuilder stringBuilder = new StringBuilder("Final Score \n");
         Dictionary<string, int> finalScore = new Dictionary<string, int>();
         foreach (var kv in LevelManager.Instance.characters)
         {
             finalScore.Add(kv.Key, Utils.GetReward(LevelManager.Instance.blocksData, kv.Key, false));
-            debugStr += $"{kv.Key}: {finalScore[kv.Key]} \n";
+            stringBuilder.AppendFormat("{0}: {1}\n", kv.Key, finalScore[kv.Key]);
             if (finalScore[kv.Key] > maxScore)
             {
                 maxScore = finalScore[kv.Key];
                 playerWin = kv.Key;
             }
         }
-        Debug.Log(debugStr);
+        Debug.Log(stringBuilder.ToString());
         Debug.Log("Player win: " + playerWin);
         instance.DelayShowVictory(int.Parse(playerWin));
     }

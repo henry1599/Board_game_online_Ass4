@@ -56,6 +56,9 @@ public class GameSceneManager : MonoBehaviour
     IEnumerator Cor_TransitionOut(System.Action _cb = null)
     {
         yield return new WaitUntil(() => SceneTransition.Instance != null);
+        if (GameManager.CurrentMode == GameMode.MachineLearning ||
+            GameManager.CurrentMode == GameMode.Compare)
+            yield return new WaitForSeconds(GameConstants.TRANSITION_IN_ML_DELAY);
         SceneTransition.Instance.TransitionOut();
         yield return new WaitForSeconds(GameConstants.TRANSITION_OUT_DURATION);
         _cb?.Invoke();

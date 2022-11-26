@@ -5,6 +5,7 @@ using DG.Tweening;
 
 public class Character : MonoBehaviour
 {
+    public List<GameObject> bodies;
     public InputHandler InputHandler;
     public Animator animator;
     public string Id;
@@ -12,6 +13,15 @@ public class Character : MonoBehaviour
     public List<Vector2Int> MoveableBlocks;
     public Color CharacterColor;
     public bool MoveComplete = false;
+
+    public void Init(int index)
+    {
+        foreach (var body in bodies)
+        {
+            body.SetActive(false);
+        }
+        bodies[index].SetActive(true);
+    }
 
     public List<Vector2Int> MoveToBlock(Block block)
     {

@@ -4,7 +4,8 @@ using UnityEngine;
 
 public enum DataType
 {
-    MOVERMENT
+    MOVERMENT,
+    ACTIVE_STATUS
 }
 
 public abstract class Data{}
@@ -19,4 +20,10 @@ public class PositionData : Data
     public string id;
     public int x;
     public int y;
+}
+
+public class ActiveData : Data
+{
+    public string id;
+    public bool active;
 }

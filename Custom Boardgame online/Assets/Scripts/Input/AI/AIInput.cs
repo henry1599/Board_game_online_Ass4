@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class AIInput : InputHandler
 {
-    protected Block targetBlock;
 
     public override void GetInput()
     {
         base.GetInput();
-        targetBlock = null;
         StartCoroutine(MakeDecision());
     }
 

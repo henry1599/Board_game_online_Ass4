@@ -20,10 +20,10 @@ public class BlocksData
         this.Data[0 * 10 + 0].CharId = "0";
         this.Data[0 * 10 + 0].CharRotation = -90;
 
-        this.Data[9 * 10 + 0].CharId = "";
+        this.Data[9 * 10 + 0].CharId = GameManager.CurrentMode == GameMode.Random ? "2" : "";
         this.Data[9 * 10 + 0].CharRotation = 90;
 
-        this.Data[0 * 10 + 9].CharId = "";
+        this.Data[0 * 10 + 9].CharId = GameManager.CurrentMode == GameMode.Random ? "3" : "";
         this.Data[0 * 10 + 9].CharRotation = 180;
 
         this.Data[9 * 10 + 9].CharId = "1";

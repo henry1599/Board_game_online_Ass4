@@ -44,6 +44,9 @@ public class ConnectionUtils
             case DataType.MOVERMENT:
                 dataBody = PositionMessageHandler(data);
                 break;
+            case DataType.ACTIVE_STATUS:
+                dataBody = ActiveMessageHandler(data);
+                break;
             default:
                 Debug.Log("Parse type error");
                 return null;
@@ -63,6 +66,14 @@ public class ConnectionUtils
         return psData;
     }
 
+    static ActiveData ActiveMessageHandler(string[] data)
+    {
+        ActiveData activeData = new ActiveData();
+        activeData.id = data[1];
+        activeData.active = bool.Parse(data[2]);
+        return activeData;
+    }
+
     static string BuildMessage(Message msg) 
     {
         var dataType = msg.type;
@@ -70,6 +81,8 @@ public class ConnectionUtils
         {
             case DataType.MOVERMENT:
                 return BuildMovermentMessage(msg);
+            case DataType.ACTIVE_STATUS:
+                return BuildActiveMessage(msg);
             default:
                 return "";
         }
@@ -80,5 +93,12 @@ public class ConnectionUtils
         PositionData data = msg.data as PositionData;
         var dataType = (int)msg.type;
         return dataType + "|" + data.id  + "|" + data.x  + "|" + data.y;
+    }
+
+    static string BuildActiveMessage(Message msg)
+    {
+        ActiveData data = msg.data as ActiveData;
+        var dataType = (int)msg.type;
+        return dataType + "|" + data.id + "|" + data.active;
     }
 }

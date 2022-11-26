@@ -10,36 +10,40 @@ public class Connection : MonoBehaviour
     public static Connection instance;
     WebSocket websocket;
     // Start is called before the first frame update
-    async void Start()
+    async void Awake()
     {
         if (instance == null) 
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);
+            websocket = new WebSocket("ws://localhost:8080");
+
+            websocket.OnOpen += () =>
+            {
+                Debug.Log("Connection open!");
+            };
+
+            websocket.OnError += (e) =>
+            {
+                Debug.Log("Error! " + e);
+            };
+
+            websocket.OnClose += (e) =>
+            {
+                Debug.Log("Connection closed!");
+            };
+
+            websocket.OnMessage += (data) =>
+            {
+                var msg = ConnectionUtils.MessageHandler(data);
+                ConnectionUtils.CallBack(msg);
+            };
+            await websocket.Connect();
         }
-
-        websocket = new WebSocket("ws://localhost:8080");
-
-        websocket.OnOpen += () =>
+        else
         {
-            Debug.Log("Connection open!");
-        };
-
-        websocket.OnError += (e) =>
-        {
-            Debug.Log("Error! " + e);
-        };
-
-        websocket.OnClose += (e) =>
-        {
-            Debug.Log("Connection closed!");
-        };
-
-        websocket.OnMessage += (data) =>
-        {
-            var msg = ConnectionUtils.MessageHandler(data);
-            ConnectionUtils.CallBack(msg);
-        };
-        await websocket.Connect();
+            Destroy(gameObject);
+        }
     }
 
     // Update is called once per frame

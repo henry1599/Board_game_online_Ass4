@@ -8,21 +8,21 @@ public class MinimaxInput : AIInput
 
     protected override IEnumerator MakeDecision()
     {
-        yield return null;
+        yield return new WaitUntil(() => GameManager.IsActive);
         CurrentCharacterBlock = new Dictionary<string, Block>();
         foreach (var kv in LevelManager.Instance.characters)
         {
             CurrentCharacterBlock.Add(kv.Key, kv.Value.CurrentBlock);
         }
 
-        StartCoroutine(MinimaxRoot(3));
+        StartCoroutine(MinimaxRoot(GameManager.MinimaxCurrentMode == MinimaxMode.Hard ? 3 : 1));
     }
 
     private int MinimaxSearch(int depth, BlocksData data, string charId, int alpha, int beta, bool isMaximizeCharacter = false)
     {
         if (depth == 0)
         {
-            return Utils.GetReward(data, character.Id, true);
+            return Utils.GetReward(data, character.Id, GameManager.MinimaxCurrentMode == MinimaxMode.Easy ? false : true);
         }
         int bestEvaluation;
 
@@ -42,7 +42,7 @@ public class MinimaxInput : AIInput
 
                 // Evaluate
                 var newBlocksData = Utils.GetNewBlocksData(data, charId, movePath);
-                int evaluation = MinimaxSearch(depth - 1, newBlocksData, nextCharId, alpha, bestEvaluation, !isMaximizeCharacter);
+                int evaluation = MinimaxSearch(depth - 1, newBlocksData, nextCharId, alpha, beta, !isMaximizeCharacter);
                 bestEvaluation = Mathf.Max(bestEvaluation, evaluation);
 
                 // Back
@@ -66,7 +66,7 @@ public class MinimaxInput : AIInput
 
                 // Evaluate
                 var newBlocksData = Utils.GetNewBlocksData(data, charId, movePath);
-                int evaluation = MinimaxSearch(depth - 1, newBlocksData, nextCharId, alpha, bestEvaluation, !isMaximizeCharacter);
+                int evaluation = MinimaxSearch(depth - 1, newBlocksData, nextCharId, alpha, beta, !isMaximizeCharacter);
                 bestEvaluation = Mathf.Min(bestEvaluation, evaluation);
 
                 // Back
